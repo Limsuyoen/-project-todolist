@@ -2,6 +2,7 @@ package com.example.todolist
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.databinding.ActivityTodoBinding
 
@@ -31,7 +32,16 @@ class TodoActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener{
             finish()
         }
-
-
+        //1. 데이터 만들기
+        val list = mutableListOf(
+            TodoItem("공부하기", false),
+            TodoItem("공부하기", false),
+            TodoItem("운동하기", false)
+        )
+        //2. Adapter 생성
+        val adapter = TodoAdapter(list)
+        //3. RecyclerView 생성(중요)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
     }
 }
