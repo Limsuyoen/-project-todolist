@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.TodoItem
 
-class TodoAdapter(private val dataSet: MutableList<TodoItem>) :
-    RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+class TodoAdapter(
+    private val dataSet: MutableList<TodoItem>
+) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     //1. ViewHolder 클래스
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

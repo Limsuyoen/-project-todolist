@@ -8,8 +8,17 @@ import com.example.todolist.databinding.ActivityTodoBinding
 
 class TodoActivity : AppCompatActivity() {
 
+    //private 이 클래스에서만 사용함
+    //activitytodobinding은 todoactivity기반으로 자동 생성된 클래스
+    // -> xml의 view들이 자동 findviewByid해서 객체로 묶어있는 형태로 생성됨
+    //var binding: ActivityTodoBinding 과 ActivityTodoBinding binding; 은같은 의미
+    //String name;(타입 변수명) == var name: String (추후수정가능여부 변수명: 타입)
     private lateinit var binding : ActivityTodoBinding//xml 레이아웃 기반으로 자동 생성 클래스
-    //kotlin은
+    //1. binding변수 생성(사용범위, 초기화여부, 추후수정여부,타입 지정)
+    //kotlin은 NPE(NullPointerException:null인 객체/변수 호출시 오류 발생)를 방지하기 위해
+    //lateinit: activity의 생명주기 떄문에 사용함
+    // binding을 선언하는 시점에는 activity가 생성되지 않음(onCreate내에서 생성)
+    //-> 어차피 binding 사용(ui연결)을 on create안에서만 할 수 있어서 나중에 초기화함
 
     override fun onCreate(saveInstanceState: Bundle?) {
         super.onCreate(saveInstanceState)
