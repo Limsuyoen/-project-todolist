@@ -7,18 +7,16 @@ import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.databinding.ActivityTodoBinding
 
 class TodoActivity : AppCompatActivity() {
-    private var mbinding: ActivityTodoBinding? = null
-    //매번 null 체크 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
-    private val binding get() = mbinding!!
+
+    private lateinit var binding : ActivityTodoBinding//xml 레이아웃 기반으로 자동 생성 클래스
+    //kotlin은
 
     override fun onCreate(saveInstanceState: Bundle?) {
         super.onCreate(saveInstanceState)
         //자동 생성된 뷰 바인딩 클래스에서의 inflate라는 메서드를 활용해
         //액티비티에서 사용할 바인딩 클래스의 인스턴스 생성
-        mbinding = ActivityTodoBinding.inflate(layoutInflater)
+        binding = ActivityTodoBinding.inflate(layoutInflater)
 
-        //getRoot메서드로 레이아웃 내부의 최상위 위치 뷰의
-        //인스턴스를 활용하여 생성된 뷰를 액티비티에 표시합니다
         setContentView(binding.root)
 
         val year = intent.getIntExtra("year", 0)
@@ -32,16 +30,20 @@ class TodoActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener{
             finish()
         }
-        //1. 데이터 만들기
-        val list = mutableListOf(
-            TodoItem("공부하기", false),
-            TodoItem("공부하기", false),
-            TodoItem("운동하기", false)
-        )
-        //2. Adapter 생성
-        val adapter = TodoAdapter(list)
-        //3. RecyclerView 생성(중요)
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
+
+        binding.inputBtn.setOnClickListener {//java와 달리 onclick()함수를 안씀
+           val str = binding.inputText.getText().toString()
+            //1. 데이터 만들기
+            val list = mutableListOf(
+                TodoItem(str, false),
+                TodoItem("공부하기", false),
+                TodoItem("운동하기", false)
+            )
+            //2. Adapter 생성
+            val adapter = TodoAdapter(list)
+            //3. RecyclerView 생성(중요)
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+            binding.recyclerView.adapter = adapter
+        }
     }
 }
