@@ -2,6 +2,7 @@ package com.example.todolist
 
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.databinding.ActivityMainBinding
@@ -14,15 +15,18 @@ class TodoActivity : AppCompatActivity() {
     // -> xml의 view들을 자동으로 연결해주는 클래스, inflate시점에 이루어짐
     //var binding: ActivityTodoBinding 과 ActivityTodoBinding binding; 은같은 의미
     //String name;(타입 변수명) == var name: String (추후수정가능여부 변수명: 타입)
-    private lateinit var binding : ActivityTodoBinding//xml 레이아웃 기반으로 자동 생성 클래스
+    private lateinit var binding: ActivityTodoBinding//xml 레이아웃 기반으로 자동 생성 클래스
     //1. binding변수 생성(사용범위, 초기화여부, 추후수정여부,타입 지정)
     //kotlin은 NPE(NullPointerException:null인 객체/변수 호출시 오류 발생)를 방지하기 위해
     //lateinit: activity의 생명주기 떄문에 사용함
     // binding을 선언하는 시점에는 activity가 생성되지 않음(onCreate내에서 생성)
     //-> 어차피 binding 사용(ui연결)을 on create안에서만 할 수 있어서 나중에 초기화한다고 선언필요
 
-    lateinit var adapter: TodoAdapter
-    val list = mutableListOf<TodoItem>()
+    private lateinit var adapter: TodoAdapter
+
+    private val viewModel: TodoViewModel by viewModels()
+
+    //private val list = mutableListOf<TodoItem>()
     //mutablelist는 kotlin에서 제공하는 함수로 변경 가능한 리스트 생성
 
     override fun onCreate(saveInstanceState: Bundle?) {
@@ -40,27 +44,34 @@ class TodoActivity : AppCompatActivity() {
         //root는 xml에서 만들어진 최상위 view ( ex) linearlayout)
         //-> xml의 모든 요소를 root라는 박스로 binding.root로 불러오는거임
 
-        // Adapter 생성
-        val adapter = TodoAdapter(list)
-        //3. RecyclerView 생성(중요)
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
-
         //MainActivity에서 intent로 넘긴 값 받아옴
         val year = intent.getIntExtra("year", 0)
         val month = intent.getIntExtra("month", 0)
         val day = intent.getIntExtra("day", 0)
+
+        val dateKey = "$year-$month-$day"
+        val list = viewModel.getList(dateKey)
+
+        adapter =TodoAdapter(list)
+
+        // Adapter 생성
+        //3. RecyclerView 생성(중요)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
         //화면에 있는 요소 변경
         binding.yearText.text = year.toString()
         binding.monthText.text = month.toString()
         binding.dayText.text = day.toString()
         //intent종료는 backbtn으로
-        binding.backBtn.setOnClickListener{
+        binding.backBtn.setOnClickListener {
             finish()
         }
 
-        list.add(TodoItem("", false, true,true))
-        adapter.notifyItemInserted(list.size - 1)
+        if(list.isEmpty()) {
+            list.add(TodoItem("", false, true, true))
+            adapter.notifyItemInserted(list.size - 1)
+        }
 
 //        binding.inputBtn.setOnClickListener {//java와 달리 onclick()함수를 안씀
 //           val str = binding.inputText.getText().toString()
