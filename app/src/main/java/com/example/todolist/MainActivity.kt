@@ -2,16 +2,17 @@ package com.example.todolist
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.todolist.databinding.ActivityMainBinding
-import com.example.todolist.databinding.ActivityTodoBinding
+import kotlin.getValue
 
 class MainActivity : AppCompatActivity() {
     //전역 변수로 바인딩 객체 선언
    private var mbinding: ActivityMainBinding? = null
     //매번 null 체크 할 필요 없이 편의성을 위해 바인딩 변수 재 선언
     private val binding get() = mbinding!!
+    private val viewModel: TodoViewModel by viewModels()
 
     override fun onCreate(saveInstanceState: Bundle?){
         super.onCreate(saveInstanceState)
@@ -26,10 +27,12 @@ class MainActivity : AppCompatActivity() {
         //이제부터 binging바인딩 변수를 활용하여 마음 껏 xml 파일 내의 뷰 id접근 가능
         //뷰 id도 파스칼케이스 + 카멜케이스 네이밍 규칙 적용으로 tv_message -> tvMessage로 변환
         binding.calendarView.setOnDateChangeListener { view, year, month, day ->
+
+            val dateKey = "$year-$month-$day"
+            viewModel.getList(dateKey)
+
             val intent = Intent(this, TodoActivity::class.java)
-            intent.putExtra("year",year)
-            intent.putExtra("month", month + 1)
-            intent.putExtra("day", day)
+            intent.putExtra("datekey",dateKey)
             startActivity(intent)
         }
     }

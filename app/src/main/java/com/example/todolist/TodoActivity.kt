@@ -1,11 +1,9 @@
 package com.example.todolist
 
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.databinding.ActivityTodoBinding
 
 class TodoActivity : AppCompatActivity() {
@@ -45,12 +43,10 @@ class TodoActivity : AppCompatActivity() {
         //-> xml의 모든 요소를 root라는 박스로 binding.root로 불러오는거임
 
         //MainActivity에서 intent로 넘긴 값 받아옴
-        val year = intent.getIntExtra("year", 0)
-        val month = intent.getIntExtra("month", 0)
-        val day = intent.getIntExtra("day", 0)
+        val dateKey = intent.getIntExtra("dateKey", 0)
 
-        val dateKey = "$year-$month-$day"
         val list = viewModel.getList(dateKey)
+
 
         adapter =TodoAdapter(list)
 
@@ -60,16 +56,17 @@ class TodoActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
         //화면에 있는 요소 변경
-        binding.yearText.text = year.toString()
-        binding.monthText.text = month.toString()
-        binding.dayText.text = day.toString()
+        binding.yearText.text = dateKey.toString()
+//        binding.yearText.dateKey = year.toString()
+//        binding.monthText.text = month.toString()
+//        binding.dayText.text = day.toString()
         //intent종료는 backbtn으로
         binding.backBtn.setOnClickListener {
             finish()
         }
 
         if(list.isEmpty()) {
-            list.add(TodoItem("", false, true, true))
+            list.add(TodoItem("", false, true, true,""))
             adapter.notifyItemInserted(list.size - 1)
         }
 

@@ -6,6 +6,6 @@ data class TodoItem(
     var isChecked: Boolean,
     var isEditing: Boolean,
     var isNew: Boolean,
-
+    val datekey: String,
 )
 

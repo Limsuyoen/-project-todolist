@@ -46,7 +46,10 @@ class TodoAdapter(
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
             item.isChecked = isChecked
         }
-        val isLast = position == dataSet.size - 1
+
+        // 현재 위치가 마지막 인덱스랑 같은지 확인
+        // 같다면 isLast가 true 아니라면 false
+        val isLast = position == dataSet.size - 1 //(0부터 시작이라 3번째면(3-1) 인덱스 2)
 
         //isEditing 상태에 따른 뷰 변경
         if(item.isEditing){
@@ -88,10 +91,10 @@ class TodoAdapter(
                 (event == null || event.action == KeyEvent.ACTION_DOWN)
             ) {
 
-                val pos = holder.adapterPosition
-                if (pos != RecyclerView.NO_POSITION) {
+                val pos = holder.adapterPosition //viewholder가 지금 가리키는 위치
+                if (pos != RecyclerView.NO_POSITION) { //정상인 값이라면
 
-                    val item = dataSet[pos]
+                    val item = dataSet[pos] //
                     val text = holder.editText.text.toString()
 
                     if (text.isNotEmpty()) {
@@ -99,7 +102,7 @@ class TodoAdapter(
                         item.isEditing = false
 
                         if(item.isNew) {
-                            dataSet.add(TodoItem("", false, true,true))
+                            dataSet.add(TodoItem("", false, true,true,""))
                             notifyItemInserted(dataSet.size - 1)
                         }
                         item.isNew = false
@@ -107,9 +110,9 @@ class TodoAdapter(
 
                     }
                 }else{
-                    if(!isLast){
-                        dataSet.removeAt(pos)
-                        notifyItemRemoved(pos)
+                    if(!isLast){ //마지막이 아닌경우
+                        dataSet.removeAt(pos) //리스트에서 해당 위치 아이템 삭제
+                        notifyItemRemoved(pos) //UI갱신 알림
                     }else{}
                 }
                 //done눌렀을때
